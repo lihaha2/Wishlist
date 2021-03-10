@@ -482,6 +482,13 @@ details summary::-webkit-details-marker {
   margin: 15px 0 0 0;
 }
 
+.wish__buttons{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
 @media(max-width: 1050px){
   .home__header {
     justify-content: center;
