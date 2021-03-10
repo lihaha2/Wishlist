@@ -75,7 +75,7 @@ export const Home = ()=>{
       <div className="wishlist__content">
         {wishlist ? wishlist.map((e,i)=>(
           <div className="content__card" key={i}>
-            <Link to={`wishlist?${e}`} className="card__link" title="Нажмите чтобы перейти к списку">
+            <Link to={`/wishlist?${e}`} className="card__link" title="Нажмите чтобы перейти к списку">
               <h3>{e}</h3>
               <img className="card__link-img" src={Default} alt="Wishlist default" />
             </Link>

@@ -10,10 +10,8 @@ import Back from '../images/back.svg'
 import Mode from '../images/mode.svg'
 
 export const Wishlist = ()=>{
-  document.addEventListener('DOMContentLoaded', () => checkStatusOfWish())
-  const checkStatusOfWish = ()=>{
+  document.addEventListener('DOMContentLoaded', () => window.location.search === '' ? window.location.replace('/') : '')
 
-  }
   const deleteWish = (text)=>{
     let title = decodeURI(window.location.search).split('?')[1]
     let result = window.confirm(`Вы точно хотите УДАЛИТЬ желание: 
@@ -21,7 +19,7 @@ export const Wishlist = ()=>{
     result ? deleteUserWishes(title,localStorage.getItem('unique'),text) : console.log('')
   }
   const completeWish = (text,status)=>{
-    status == false ? status = true : status = false
+    status === false ? status = true : status = false
     let title = decodeURI(window.location.search).split('?')[1]
     completeUserWishes(title,localStorage.getItem('unique'),text,status)
   }

@@ -43,7 +43,7 @@ export const authAccount = (email,password)=>{
 
 export const verifyAccount = async(email)=>{
   await firebase.auth().sendSignInLinkToEmail(email,{
-    url: 'http://localhost:3000/reg_two',
+    url: 'http://wishlistforyou.herokuapp.com/reg_two',
     handleCodeInApp: true
   })
   localStorage.setItem('verifyEmail', email)

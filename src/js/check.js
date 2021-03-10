@@ -5,7 +5,7 @@ export const Check = ()=>{
         }else{
             let GET = window.location.search.split('&')
             let continueUrl = GET[3].split('=')[1]
-            window.location.replace(continueUrl)
+            window.location.replace('/verify')
         }
     }, false)
     

@@ -23,7 +23,7 @@ const App = ()=>{
           />
           <Route path="/verify">
             <div className="container">
-              {localStorage.getItem('verifyEmail')=== null ? <Redirect to="/" /> : <Verify/>}
+              {localStorage.getItem('verifyEmail') === null ? <Redirect to="/" /> : <Verify/>}
             </div>
           </Route>
           <Route path="/auth">
@@ -46,7 +46,7 @@ const App = ()=>{
           </Route>
           <Route path="/wishlist">
             <div className="container">
-              {localStorage.getItem('email') !== null ? <Wishlist /> : <Redirect to="/auth" />}
+              {localStorage.getItem('email') === null ? <Redirect to="/auth" /> : <Wishlist /> }
             </div>
           </Route>
           <Route path="/finish">
@@ -58,8 +58,5 @@ const App = ()=>{
       </Router>
     )
 }
-
-const sosi = window.sosi = ()=> console.log(window.location.origin)
-
 
 export default App;
