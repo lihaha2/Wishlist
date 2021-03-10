@@ -130,7 +130,7 @@ export const Home = ()=>{
           </div>
           <nav className="header__nav grow">
             <ul className="nav__ul">
-              <li><Link to="#about" className="nav__link"><img className="svg" title="Описание" src={Text} alt="Описание" /><span> Описание</span></Link></li>
+              <li><a href="#about" className="nav__link"><img className="svg" title="Описание" src={Text} alt="Описание" /><span> Описание</span></a></li>
               <li><a href="#wishlists" className="nav__link" onClick={()=>{
                 document.querySelector('.wishlists__nav > h2').classList.add('underline')
                 document.querySelector('.wishlists__nav > h2').classList.remove('nonunderline')
@@ -178,7 +178,9 @@ export const Home = ()=>{
         </div>
         <hr />
         <Wishlists />
-        
+      </section>
+      <section className="home__about" id="about">
+              
       </section>
     </div>
   )

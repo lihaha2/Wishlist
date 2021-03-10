@@ -138,14 +138,15 @@ option{
 .form__subtext-link{
   text-decoration: underline;
 }
-.form__input{
+.form__input {
   outline: none;
   font-size: 14px;
-  padding: 10px 100px 10px 10px;
+  padding: 10px 0px 10px 10px;
   border: 1px solid var(--skin);
-  font-family: var(--text);
+  font-family: var(--title);
   font-size: 20px;
   color: var(--blue);
+  width: 100%;
 }
 .form__input[type="email"]{
   margin: 0 0 1rem 0;
@@ -471,7 +472,10 @@ details summary::-webkit-details-marker {
 .wish__text{
   word-break: break-word;
   margin: 0 15px 0 0;
-  /* text-decoration: line-through; */
+}
+
+.true{
+  text-decoration: line-through; 
 }
 
 .temp_class{

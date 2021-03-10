@@ -78,3 +78,7 @@ export const signOutUser = ()=>{
     window.alert(error)
   })
 }
+
+export const completeUserWishes = (title, user, text, stat)=>{
+  firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).update({status: stat})
+}
