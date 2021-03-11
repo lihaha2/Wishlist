@@ -75,8 +75,16 @@ summary {
   cursor: pointer;
 }
 
+details:focus, summary:focus {
+  outline: none;
+}
+
 option{
   font-size: 16px;
+}
+
+img{
+  user-select: none;
 }
 
 .container{
