@@ -1,0 +1,6 @@
+tasks for wishlist:
+    1. img upload. Можно сохранять ссылки с сайтов товара(после парсера) 
+    2. parser
+    3. made firebase Config as private
+    4. go to NEXT.js
+    5. add edit password
