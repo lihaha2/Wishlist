@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router, Switch,Route, Redirect} from "react-router-dom"
-import './css/App.min.css'
+import './css/App.css'
 import {Auth} from './pages/Auth'
 import {Reg} from './pages/Reg'
 import {RegTwo} from './pages/Reg_two'

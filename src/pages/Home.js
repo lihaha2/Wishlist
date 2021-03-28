@@ -14,7 +14,39 @@ import Del from '../images/delete.svg'
 import Default from '../images/default.svg'
 import Mode from '../images/mode.svg'
 import ModeRed from '../images/mode_red.svg'
+import Car from '../images/car.png'
+import Phone from '../images/phone.png'
+import Flight from '../images/flight.png'
 
+const ScrollTo = (target)=>{
+  let t
+  let pos = document.documentElement.scrollTop
+
+  const up = ()=>{
+    window.scrollBy(0,-20)
+    pos = document.documentElement.scrollTop
+    t = setTimeout(up, 10)
+    if(pos < target.offsetTop){
+      clearTimeout(t)
+      return false
+    }
+  } 
+  
+  const down = ()=>{
+    window.scrollBy(0,20)
+    pos = document.documentElement.scrollTop
+    t = setTimeout(down, 10)
+    if(pos > target.offsetTop){
+      clearTimeout(t)
+      return false
+    }
+  }
+
+  pos > target.offsetTop ? 
+    up() : 
+  pos < target.offsetTop ? 
+    down() : clearTimeout(t)
+}
 
 const ChangeSize = () => {
   if(localStorage.getItem('reduce') === 'true'){
@@ -29,6 +61,15 @@ const ChangeSize = () => {
     document.querySelector('.nav__ul').style.justifyContent = 'center'
     document.querySelector('.change__img > img').style.transform = 'rotate(180deg)'
   }
+}
+
+const Underline = (target)=>{
+  target.classList.add('underline')
+  target.classList.remove('nonunderline')
+  setTimeout(() => {
+    target.classList.add('nonunderline')
+    target.classList.remove('underline')
+  }, 800)
 }
 
 const newListHandler = (i = 0) => {
@@ -117,6 +158,50 @@ const SelectWishlists = () => {
 }
 const signOutHandler = () => Confirm('Вы точно хотите выйти из учётной записи?',signOutUser)
 
+const OpenListHandler = ()=> setTimeout(()=>document.querySelector('#newListDetails').open = true , 500)
+
+const About = ()=>{
+  return(
+    <section className="home__about home__wishlists"> 
+      <h2 className="about__title">Добавляйте свои желания при помощи <a href="#wishlists" className="header__title">WISHLIST</a></h2>
+      <div className="about__content">
+        <div className="about__content-text">
+          <p className="about__content-text--p">
+              Вопрос о смысле жизни, так или иначе, затрагивает со временем каждого из нас. 
+            Кого-то раньше, кого-то позже. Однако это не меняет сути вопроса. 
+            Говорят, что смысл жизни у каждого свой, однако если подумать…<br /> 
+            На протяжении дней, месяцев, долгих лет мы стремимся к исполнению своей заветной мечты, 
+            и если 10 процентов результата зависит от внешних обстоятельств, 
+            то остальные 90 часто зависят от нас самих.
+          </p>
+          <p className="about__content-text--p">
+            Наша команда попыталась заполнить часть из 10 процентов внешних обстоятельств,
+            что бы вы смогли исполнить свою мечту.
+          </p>
+        </div>
+        <div className="about__content-articles">
+          <article className="about__content-articles--article">
+            Мечтай
+          </article>
+          <img src={Car} alt="Машина" className="about__content-articles--img" />
+        </div>
+        <div className="about__content-articles">
+          <img src={Phone} alt="Телефон" className="about__content-articles--img---vertical" />
+          <article  className="about__content-articles--article">
+            Планируй
+          </article>
+        </div>
+        <div className="about__content-articles">
+          <article className="about__content-articles--article goto" onClick={()=>{ScrollTo(document.querySelector('#wishlists')); OpenListHandler()}}>
+            Реализуй
+          </article>
+          <img src={Flight} alt="Самолет" className="about__content-articles--img" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export class Home extends Component {
   componentDidMount(){
     ChangeSize()
@@ -134,16 +219,24 @@ export class Home extends Component {
             </div>
             <nav className="header__nav grow">
               <ul className="nav__ul">
-                <li><a href="#about" className="nav__link"><img className="svg" title="Описание" src={Text} alt="Описание" /><span> Описание</span></a></li>
-                <li><a href="#wishlists" className="nav__link" onClick={()=>{
-                  document.querySelector('.wishlists__nav > h2').classList.add('underline')
-                  document.querySelector('.wishlists__nav > h2').classList.remove('nonunderline')
-                  setTimeout(() => {
-                    document.querySelector('.wishlists__nav > h2').classList.add('nonunderline')
-                    document.querySelector('.wishlists__nav > h2').classList.remove('underline')
-                  }, 800)
-                }}><img className="svg" title="Ваши списки желаний" src={List} alt="Список" /><span> Ваши списки желаний</span></a></li>
-                <li><a href="#newListDetails" className="nav__link" onClick={()=>document.querySelector('#newListDetails').open === true ? document.querySelector('#newListDetails').open = false : document.querySelector('#newListDetails').open = true }><img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" /><span> Создать новый список желаний</span></a></li>
+                <li>
+                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#about')); Underline(document.querySelector('.home__about > h2'))}}>
+                    <img className="svg" title="Описание" src={Text} alt="Описание" />
+                    <span> Описание</span>
+                  </div>
+                </li>
+                <li>
+                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
+                    <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
+                    <span> Ваши списки желаний</span>
+                  </div>
+                </li>
+                <li>
+                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
+                    <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
+                    <span> Создать новый список желаний</span>
+                  </div>
+                </li>
               </ul>
             </nav>
             <div className="header__account grow">
@@ -183,8 +276,8 @@ export class Home extends Component {
           <hr />
           <Wishlists />
         </section>
-        <section className="home__about" id="about"> 
-        </section>
+        <div id="about"></div>
+        <About/>
       </main>
     )
   }
