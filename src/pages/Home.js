@@ -51,11 +51,14 @@ const ScrollTo = (target)=>{
 const ChangeSize = () => {
   if(localStorage.getItem('reduce') === 'true'){
     document.querySelectorAll('.nav__link > span').forEach( e => e.style.display = 'block')
+    document.querySelector('.home__header').style.transition = 'padding 0.5s cubic-bezier(0, 0, 1, 1)'
     document.querySelector('.home__header').style.padding = '2rem'
+    
     document.querySelector('.nav__ul').style.display = 'block'
     document.querySelector('.change__img > img').style.transform = 'rotate(0deg)'
   }else{
     document.querySelectorAll('.nav__link > span').forEach( e => e.style.display = 'none')
+    document.querySelector('.home__header').style.transition = 'padding 0.5s cubic-bezier(0, 0, 1, 1)'
     document.querySelector('.home__header').style.padding = '1rem 2rem 1rem 2rem'
     document.querySelector('.nav__ul').style.display = 'flex'
     document.querySelector('.nav__ul').style.justifyContent = 'center'
@@ -163,7 +166,7 @@ const OpenListHandler = ()=> setTimeout(()=>document.querySelector('#newListDeta
 const About = ()=>{
   return(
     <section className="home__about home__wishlists"> 
-      <h2 className="about__title">Добавляйте свои желания при помощи <a href="#wishlists" className="header__title">WISHLIST</a></h2>
+      <h2 className="about__title">Добавляйте свои желания при помощи <div className="header__title" onClick={()=> ScrollTo(document.querySelector('#wishlists'))}>WISHLIST</div></h2>
       <div className="about__content">
         <div className="about__content-text">
           <p className="about__content-text--p">
@@ -257,7 +260,7 @@ export class Home extends Component {
             <details className="details" id="newListDetails" title="Нажмите чтобы создать новый список желаний">
               <summary className="nav__buttons-link"><img src={AddWhite} alt="Создать новый список" /> Создать новый список</summary>
               <div className="details__show">
-                <input id="newList" className="show__input" type="text" placeholder="Название списка" maxLength="20" title="Максимум 20 символов" />
+                <input id="newList" className="show__input" type="text" placeholder="Название списка" maxLength="21" title="Максимум 20 символов" />
                 <Link to="#" className="show__button"  onClick={newListHandler} title="Создать список желаний">Создать</Link>
               </div>
             </details>
