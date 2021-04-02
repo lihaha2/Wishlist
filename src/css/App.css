@@ -58,6 +58,7 @@ body{
 }
 
 hr{
+  background-color: #475957;
   border: 1px solid #475957;
 }
 
@@ -274,12 +275,12 @@ padding: 0 5rem;
   padding: 0 0 0 15px;
 }
 
-.account__button:hover,.nav__link > span:hover{
+.account__button:hover, .nav__link:hover span{
   transition: 1s;
   color: #CC4A55;
 }
 
-.svg:hover {
+.svg:hover, .nav__link:hover img  {
   filter: brightness(0.7);
 }
 
@@ -402,6 +403,7 @@ padding: 0 5rem;
 }
 
 .show__button{
+  cursor: pointer;
   background-color: #a6c285;
   color: white;
   font-size: 14px;
@@ -462,6 +464,7 @@ details summary::-webkit-details-marker {
 }
 
 .wish{
+  margin: 10px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -473,12 +476,13 @@ details summary::-webkit-details-marker {
 
 .wish__content{
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   font-size: 20px;
 }
 
 .wish__num{
-  width: 25px;
+  width: 30px;
+  height: auto;
 }
 
 .wish__text{
@@ -627,6 +631,21 @@ details summary::-webkit-details-marker {
   height: 50%;
   width: 7rem;
 }
+
+.about__prewiew{
+  margin: 15px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.about__prewiew-img{
+  width: 60%;
+  margin: 0 30px 0 0;
+  border-radius: 8px;
+}
+
 
 @media(max-width: 1050px){
   .home__header {

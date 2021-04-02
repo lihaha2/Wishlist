@@ -14,11 +14,14 @@ import Del from '../images/delete.svg'
 import Default from '../images/default.svg'
 import Mode from '../images/mode.svg'
 import ModeRed from '../images/mode_red.svg'
+import Logout from '../images/logout.svg'
+import Login from '../images/login.svg'
 import Car from '../images/car.png'
 import Phone from '../images/phone.png'
 import Flight from '../images/flight.png'
+import Prewiew from '../images/prewiew.png'
 
-const ScrollTo = (target)=>{
+const ScrollTo = target=>{
   let t
   let pos = document.documentElement.scrollTop
 
@@ -66,7 +69,7 @@ const ChangeSize = () => {
   }
 }
 
-const Underline = (target)=>{
+const Underline = target => {
   target.classList.add('underline')
   target.classList.remove('nonunderline')
   setTimeout(() => {
@@ -166,7 +169,7 @@ const OpenListHandler = ()=> setTimeout(()=>document.querySelector('#newListDeta
 const About = ()=>{
   return(
     <section className="home__about home__wishlists"> 
-      <h2 className="about__title">Добавляйте свои желания при помощи <div className="header__title" onClick={()=> ScrollTo(document.querySelector('#wishlists'))}>WISHLIST</div></h2>
+      <h2 className="about__title">Добавляйте свои желания при помощи <span className="header__title goto" onClick={()=> document.querySelector('#wishlists') !== null ? ScrollTo(document.querySelector('#wishlists')) : ''}>WISHLIST</span></h2>
       <div className="about__content">
         <div className="about__content-text">
           <p className="about__content-text--p">
@@ -177,10 +180,14 @@ const About = ()=>{
             и если 10 процентов результата зависит от внешних обстоятельств, 
             то остальные 90 часто зависят от нас самих.
           </p>
-          <p className="about__content-text--p">
-            Наша команда попыталась заполнить часть из 10 процентов внешних обстоятельств,
-            что бы вы смогли исполнить свою мечту.
-          </p>
+          <div className="about__prewiew">
+            <img src={Prewiew} className="about__prewiew-img" alt="Превью сайта"/>
+            <p className="about__content-text--p">
+              Наша команда попыталась заполнить часть из 10 процентов внешних обстоятельств,
+              что бы вы смогли исполнить свою мечту.
+            </p>
+          </div>
+          
         </div>
         <div className="about__content-articles">
           <article className="about__content-articles--article">
@@ -195,12 +202,43 @@ const About = ()=>{
           </article>
         </div>
         <div className="about__content-articles">
-          <article className="about__content-articles--article goto" onClick={()=>{ScrollTo(document.querySelector('#wishlists')); OpenListHandler()}}>
+          <article className="about__content-articles--article goto" onClick={()=>{if(document.querySelector('#wishlists') !==null){ScrollTo(document.querySelector('#wishlists')); OpenListHandler()}}}>
             Реализуй
           </article>
           <img src={Flight} alt="Самолет" className="about__content-articles--img" />
         </div>
       </div>
+    </section>
+  )
+}
+
+const HomeWishlists = ()=>{
+  return(
+    <section className="home__wishlists" id="wishlists">
+      <div className="wishlists__nav">
+        <h2 title="Управляйте вашими желаниями здесь">Ваши списки желаний</h2>
+        <div className="nav__buttons">
+        <details className="details" id="newListDetails" title="Нажмите чтобы создать новый список желаний">
+          <summary className="nav__buttons-link"><img src={AddWhite} alt="Создать новый список" /> Создать новый список</summary>
+          <div className="details__show">
+            <input id="newList" className="show__input" type="text" placeholder="Название списка" maxLength="21" title="Максимум 20 символов" />
+            <div className="show__button"  onClick={newListHandler} title="Создать список желаний">Создать</div>
+          </div>
+        </details>
+        <details className="details" id="newWishDetails" title="Нажмите чтобы создать новое желание">
+          <summary className="nav__buttons-link"><img src={Mode} alt="Добавить новое желание" /> Добавить новое желание</summary>
+          <div className="details__show">
+            <select className="show__input select" id="wishTitle">
+              <SelectWishlists />
+            </select>
+            <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
+            <div className="show__button" title="Добавить желание" onClick={newWishHandler}>Добавить</div>
+          </div>
+        </details>
+        </div>
+      </div>
+      <hr />
+      <Wishlists />
     </section>
   )
 }
@@ -211,6 +249,55 @@ export class Home extends Component {
   }
 
   render() {
+    const Navlinks = ()=>(
+      <>
+      <li>
+        <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
+          <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
+          <span> Ваши списки желаний</span>
+        </div>
+      </li>
+      <li>
+        <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
+          <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
+          <span> Создать новый список желаний</span>
+        </div>
+      </li>
+      <li>
+        <div className="nav__link" onClick={signOutHandler} title="Выйти из аккаунта">
+          <img className="svg" title="Выйти из аккаунта" src={Logout} alt="Выход" />
+          <span> Выход</span>
+        </div>
+      </li>  
+      </>
+    )
+    
+    const Account = ()=>{
+      if (localStorage.getItem('email') !== null) {
+        return(
+          <div className="header__account grow">
+            <p title="Ваш аккаунт">{localStorage.getItem('email')}</p>
+          </div>
+        )
+      }else{
+        return(
+          <>
+          </>
+        )
+      }
+    }
+
+    const Log = ()=>{
+      return(
+        <li>
+          <Link to="/auth" className="nav__link" title="Войти в аккаунт">
+            <img className="svg" title="Вход" src={Login} alt="Вход" />
+            <span> Вход</span>
+          </Link>
+        </li>
+      )
+    }
+
     return(
       <main className="home">
         <header className="home__head">
@@ -228,24 +315,12 @@ export class Home extends Component {
                     <span> Описание</span>
                   </div>
                 </li>
-                <li>
-                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
-                    <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
-                    <span> Ваши списки желаний</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
-                    <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
-                    <span> Создать новый список желаний</span>
-                  </div>
-                </li>
+                {
+                  localStorage.getItem('unique') !== null ? <Navlinks/> : <Log/>
+                }
               </ul>
             </nav>
-            <div className="header__account grow">
-              <p title="Ваш аккаунт">{localStorage.getItem('email')}</p>
-              <Link to="#" onClick={signOutHandler} className="account__button" title="Выйти из аккаунта">Выйти</Link>
-            </div>
+            <Account/>
           </div>
           <div className="home__header-change">
             <div className="change__img" title="Показать/Скрыть навигацию" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
@@ -253,32 +328,9 @@ export class Home extends Component {
             </div>
           </div>
         </header>
-        <section className="home__wishlists" id="wishlists">
-          <div className="wishlists__nav">
-            <h2 title="Управляйте вашими желаниями здесь">Ваши списки желаний</h2>
-            <div className="nav__buttons">
-            <details className="details" id="newListDetails" title="Нажмите чтобы создать новый список желаний">
-              <summary className="nav__buttons-link"><img src={AddWhite} alt="Создать новый список" /> Создать новый список</summary>
-              <div className="details__show">
-                <input id="newList" className="show__input" type="text" placeholder="Название списка" maxLength="21" title="Максимум 20 символов" />
-                <Link to="#" className="show__button"  onClick={newListHandler} title="Создать список желаний">Создать</Link>
-              </div>
-            </details>
-            <details className="details" id="newWishDetails" title="Нажмите чтобы создать новое желание">
-              <summary className="nav__buttons-link"><img src={Mode} alt="Добавить новое желание" /> Добавить новое желание</summary>
-              <div className="details__show">
-                <select className="show__input select" id="wishTitle">
-                  <SelectWishlists />
-                </select>
-                <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
-                <Link to="#" className="show__button" title="Добавить желание" onClick={newWishHandler}>Добавить</Link>
-              </div>
-            </details>
-            </div>
-          </div>
-          <hr />
-          <Wishlists />
-        </section>
+        {
+          localStorage.getItem('unique') !== null ? <HomeWishlists /> : <></>
+        }
         <div id="about"></div>
         <About/>
       </main>

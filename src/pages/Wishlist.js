@@ -79,12 +79,12 @@ export const Wishlist = () => {
             {wishlist ? wishlist.map((e,i) => (
                 <div className="wish" key={i}>
                 <div className="wish__content">
-                  <div className="wish__num">
+                  <span className="wish__num">
                     {i+1}.
-                  </div>
-                  <div className={wishlistStatus ? 'wish__text ' + wishlistStatus.get(e) : 'sosi'} >
+                  </span>
+                  <article className={wishlistStatus ? 'wish__text ' + wishlistStatus.get(e) : 'sosi'} >
                     {e}
-                  </div>
+                  </article>
                 </div>
                 <div className="wish__buttons">
                   <Link to={`wishlist?${title}`} onClick={() => completeWish(e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></Link>

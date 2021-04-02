@@ -18,7 +18,7 @@ const App = ()=>(
           <Route 
             exact 
             path="/" 
-            render={()=>(localStorage.getItem('email') !== null ? <Home/> : <Redirect to="/auth" /> )} 
+            render={()=><Home/>} 
           />
           <Route 
             path="/verify"
