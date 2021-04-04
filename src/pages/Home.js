@@ -129,8 +129,8 @@ const Wishlists = () => {
             <img className="card__link-img" src={Default} alt="Wishlist default" />
           </Link>
           <div className="card__options">
-            <a href="#newWishDetails" onClick={()=>document.querySelector('#newWishDetails').open === true ? document.querySelector('#newWishDetails').open = false : document.querySelector('#newWishDetails').open = true}><img className="svg" src={ModeRed} alt="Добавить желание" title="Добавить желание в список" /></a>
-            <Link to="#" onClick={()=>deleteListHandler(e)}><img className="svg" src={Del} alt="Удалить список желаний" title="Удалить список желаний" /></Link>
+            <div onClick={()=>{document.querySelector('#newWishDetails').open === true ? document.querySelector('#newWishDetails').open = false : document.querySelector('#newWishDetails').open = true; ScrollTo(document.querySelector('#newWishDetails'))}}><img className="svg" src={ModeRed} alt="Добавить желание" title="Добавить желание в список" /></div>
+            <div onClick={()=>deleteListHandler(e)}><img className="svg" src={Del} alt="Удалить список желаний" title="Удалить список желаний" /></div>
           </div>
         </div>
       )) : <div className="noWishes">У вас нет ни одного списка желаний</div> }

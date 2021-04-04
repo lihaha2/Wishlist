@@ -249,7 +249,7 @@ padding: 0 5rem;
 
 .change__img{
   cursor: pointer;
-  background-color: #CC4A55 ;
+  background-color: #CC4A55;
   border-radius: 6px 6px 0 0;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.14), 0 2px 2px 0 rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
 }
@@ -259,6 +259,7 @@ padding: 0 5rem;
 }
 
 .svg{
+  cursor: pointer;
   width: 35px;
   transition: filter 0.5s;
 }
@@ -642,7 +643,6 @@ details summary::-webkit-details-marker {
 
 .about__prewiew-img{
   width: 60%;
-  margin: 0 30px 0 0;
   border-radius: 8px;
 }
 
@@ -701,6 +701,17 @@ details summary::-webkit-details-marker {
   .about__content-articles--img---vertical{
     width: 5rem;
   }
+  .card__link-img {
+    width: 150px;
+  }
+  .card__link > h3 {
+    max-width: 150px;
+  }
+
+  .about__prewiew-img {
+    width: 100%;
+    border-radius: 0px;
+  }
 }
 
 @media(max-width:350px){
@@ -713,8 +724,34 @@ details summary::-webkit-details-marker {
   .home__header {
     padding: 0rem !important;
   }
+  .nav__buttons-link {
+    font-size: 12px;
+    padding: 0.5rem 1rem 0.5rem 0rem;
+    margin: 10px 0;
+  }
+  .card__link > h3 {
+    font-size: 16px;
+    max-width: 75px;
+  }
+  .svg {
+    width: 25px;
+  }
   .card__link-img {
-    width: 200px;
-    height: auto;
+    width: 80px;
+  }
+  .content__card {
+    padding: 1rem 1rem 0.5rem 1rem;
+    margin: 1rem 0.5px;
+  }
+  .wishlist__content {
+    padding: 0.5rem 0px;
+  }
+  h2 {
+    font-size: 24px;
+  }
+  .about__content-text--p {
+    padding: 0rem 0;
+    font-size: 14px;
+    line-height: 30px;
   }
 }
