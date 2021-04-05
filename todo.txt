@@ -4,3 +4,4 @@ tasks for wishlist:
     3. made firebase Config as private
     4. go to NEXT.js
     5. add edit password
+    6. Доделать верефикацию Email на reg_two сделать запрос к бд и использовать метод hasChild для поиска совпадений email

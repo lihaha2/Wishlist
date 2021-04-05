@@ -1,6 +1,6 @@
 import React, {useEffect, useState, Component} from 'react'
 import {Link} from "react-router-dom"
-import {ConnectToFireBase, setToUserWishlist, setToUserWishes, deleteUserWishlist, signOutUser} from '../js/Firebase.js'
+import {setToUserWishlist, setToUserWishes, deleteUserWishlist, signOutUser} from '../js/Firebase.js'
 import {AlertOpen, Confirm} from '../js/Errors.js'
 import firebase from 'firebase/app'
 import 'firebase/database'
@@ -109,7 +109,6 @@ const deleteListHandler = title => Confirm(`Вы точно хотите УДА�
 const Wishlists = () => {
   const [wishlist, setWishlist] = useState()
   useEffect(()=>{
-    ConnectToFireBase()
     firebase.database().ref(`Users/${localStorage.getItem('unique')}`).child("Wishlists").on("value",(snapshot)=>{
       const wish = snapshot.val()
       const wishlist = []
@@ -141,7 +140,6 @@ const Wishlists = () => {
 const SelectWishlists = () => {
   const [wishlist, setWishlist] = useState()
   useEffect(()=>{
-    ConnectToFireBase()
     firebase.database().ref(`Users/${localStorage.getItem('unique')}`).child("Wishlists").on("value",(snapshot)=>{
       const wish = snapshot.val()
       const wishlist = []

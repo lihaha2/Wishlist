@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Link} from "react-router-dom"
 import firebase from 'firebase/app'
 import 'firebase/database'
-import {ConnectToFireBase, setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
+import {setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
 import {AlertOpen, Confirm} from '../js/Errors'
 //images
 import Del from '../images/delete.svg'
@@ -33,8 +33,6 @@ const addNewWish = () => {
 
 export const Wishlist = () => {
   document.addEventListener('DOMContentLoaded', () => window.location.search === '' ? window.location.replace('/') : '')
-
-  ConnectToFireBase()
 
   let title = decodeURI(window.location.search).split('?')[1]
   const [wishlist, setWishlist] = useState()

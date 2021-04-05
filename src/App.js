@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {BrowserRouter as Router, Switch,Route, Redirect} from "react-router-dom"
 import './css/App.css'
 import {Auth} from './pages/Auth'
@@ -10,9 +10,16 @@ import {Finish} from './pages/Finish'
 import {Wishlist} from './pages/Wishlist'
 import {Check} from './js/Check'
 import {Alert} from './js/Errors'
-  
-const App = ()=>(
-  <>
+import {ConnectToFireBase} from './js/Firebase.js'
+
+export class App extends Component {
+  componentDidMount(){
+    ConnectToFireBase()
+  }
+
+  render() {
+    return(
+      <>
     <Router>
       <Switch>
           <Route 
@@ -94,6 +101,8 @@ const App = ()=>(
     </Router>
     <Alert />
   </>
-)
+    )
+  }
+}
 
 export default App;
