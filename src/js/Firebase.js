@@ -23,7 +23,6 @@ class ConnectToBase {
 export const ConnectToFireBase = () => new ConnectToBase().iniApp
 
 export const createAccount = (email,password) => {
-
   firebase.auth().createUserWithEmailAndPassword(email,password)
   .then(() => {
     localStorage.clear()
@@ -33,7 +32,6 @@ export const createAccount = (email,password) => {
 }
 
 export const authAccount = (email,password) => {
-
   firebase.auth().signInWithEmailAndPassword(email,password)
   .then( e => {
     window.localStorage.setItem('email',email)
@@ -43,14 +41,16 @@ export const authAccount = (email,password) => {
   .catch( error => errorBase(error.code))
 }
 
-export const verifyAccount = async(email) => {
-  await firebase.auth().sendSignInLinkToEmail(email,{
-    url: 'http://wishlistforyou.herokuapp.com/reg_two',
+export const verifyAccount = email => {
+  firebase.auth().sendSignInLinkToEmail(email,{
+    url: `http://wishlistforyou.herokuapp.com/reg_two?${email}`,
     handleCodeInApp: true
-  })
-  localStorage.setItem('verifyEmail', email)
-  await firebase.database().ref(`Emails/`).child(email).update({status: 'during'})
-  window.location.replace('/verify')
+  }).then( async() => {
+    localStorage.setItem('verifyEmail', email)
+    await firebase.database().ref(`Emails/`).child(email.split('@')[0]).update({status: 'during'})
+    window.location.replace('/verify')
+  }).catch(error => errorBase(error.code))
+
 }
 
 export const setToUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists`).child(title).child('Wishes').set('', false)

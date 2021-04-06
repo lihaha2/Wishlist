@@ -13,6 +13,13 @@ const Create = (password, confPassword) => {
 }
 
 export class RegTwo extends Component{
+    componentDidMount(){
+        if (window.location.search === '') {
+            window.location.replace('/auth')
+        }else{
+            localStorage.setItem('verifyEmail',window.location.search.split('?')[1])
+        }
+    }
     render(){
         return(
             <main className="auth__content">
