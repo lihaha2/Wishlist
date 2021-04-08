@@ -20,6 +20,7 @@ import Car from '../images/car.png'
 import Phone from '../images/phone.png'
 import Flight from '../images/flight.png'
 import Prewiew from '../images/prewiew.png'
+import AddCircle from '../images/add_circle.svg'
 
 const ScrollTo = target=>{
   let t
@@ -220,7 +221,7 @@ const HomeWishlists = ()=>{
           <summary className="nav__buttons-link"><img src={AddWhite} alt="Создать новый список" /> Создать новый список</summary>
           <div className="details__show">
             <input id="newList" className="show__input" type="text" placeholder="Название списка" maxLength="21" title="Максимум 20 символов" />
-            <div className="show__button"  onClick={newListHandler} title="Создать список желаний">Создать</div>
+            <div className="show__button"  onClick={newListHandler} title="Создать список желаний"><img src={AddCircle} className="summary-img" alt="add"/> Создать</div>
           </div>
         </details>
         <details className="details" id="newWishDetails" title="Нажмите чтобы создать новое желание">
@@ -230,7 +231,7 @@ const HomeWishlists = ()=>{
               <SelectWishlists />
             </select>
             <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
-            <div className="show__button" title="Добавить желание" onClick={newWishHandler}>Добавить</div>
+            <div className="show__button" title="Добавить желание" onClick={newWishHandler}><img src={AddCircle} className="summary-img" alt="add"/> Добавить</div>
           </div>
         </details>
         </div>

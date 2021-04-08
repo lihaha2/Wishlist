@@ -87,6 +87,11 @@ option{
 
 img{
   user-select: none;
+  transition: transform 1s !important;
+}
+
+img:hover {
+  transform: rotate(180deg);
 }
 
 .container{
@@ -169,11 +174,12 @@ img{
 
 .form__input:hover, .show__input:hover{
   transition: 0.5s;
-  border: 1px solid #8A651B;
+  border: 2px solid var(--red);
 }
 
 .form__input:focus, .show__input:focus{
   transition: 0.5s;
+  border: 2px solid var(--red);
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.14), 0 2px 2px 0 rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.20);
 }
 
@@ -325,6 +331,11 @@ padding: 0 5rem;
   margin: 0 10px;
 }
 
+.nav__buttons-link:hover img{
+  transform: rotate(180deg);
+  transition: 1s;
+}
+
 .nav__buttons-link:hover{
   
   background-color: var(--skin);
@@ -370,6 +381,7 @@ padding: 0 5rem;
 }
 
 .card__link > h3{
+  transition: 1s;
   max-width: 255px;
   text-align: center;
 }
@@ -395,15 +407,18 @@ padding: 0 5rem;
 .show__input{
   outline: none;
   font-size: 14px;
-  width: 100%;
+  width: 110%;
   padding: 15px;
-  border: 1px solid var(--skin);
+  border: 2px solid var(--skin);
+  border-radius: 6px;
   font-family: var(--text);
   color: var(--blue);
   margin: 0 0 15px 0;
 }
 
 .show__button{
+  align-items: center;
+  display: flex;
   cursor: pointer;
   background-color: #a6c285;
   color: white;
@@ -426,10 +441,10 @@ padding: 0 5rem;
 }
 
 .details__show > textarea{
-  max-width: 200px;
+  max-width: 110%;
   max-height: 250px;
   min-height: 65px;
-  min-width: 195px;
+  min-width: 110%;
   transition: 0s !important;
 }
 
@@ -454,6 +469,18 @@ padding: 0 5rem;
 
 details summary::-webkit-details-marker {
   display: none;
+}
+
+.summary-img{
+  transition: transform 1s;
+  margin: 2px 10px 0 0;
+  width: 24px;
+  height: 24px;
+}
+
+.show__button:hover img{
+  transform: rotate(180deg);
+  transition: 1s;
 }
 
 .wishes__content{
@@ -612,7 +639,8 @@ details summary::-webkit-details-marker {
 }
 
 .goto{
-  padding: 1rem 0 0 0;
+  transition: 1s;
+  padding: 6rem 0 0 0;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -644,6 +672,7 @@ details summary::-webkit-details-marker {
 .about__prewiew-img{
   width: 60%;
   border-radius: 8px;
+  transform: none !important;
 }
 
 
