@@ -302,9 +302,9 @@ export class Home extends Component {
         <header className="home__head">
           <div className="home__header">
             <div className="header__container grow">
-              <Link to="/" className="header__title " title="Домашняя страница">
+              <div className="header__title " title="Домашняя страница" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
                   WISH LIST
-              </Link>
+              </div>
             </div>
             <nav className="header__nav grow">
               <ul className="nav__ul">

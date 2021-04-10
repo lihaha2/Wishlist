@@ -282,9 +282,13 @@ padding: 0 5rem;
   padding: 0 0 0 15px;
 }
 
-.account__button:hover, .nav__link:hover span{
+.nav__link:hover span{
   transition: 1s;
   color: #CC4A55;
+}
+
+.nav__link:hover img  {
+  transform: rotate(180deg);
 }
 
 .svg:hover, .nav__link:hover img  {
