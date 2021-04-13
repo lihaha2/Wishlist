@@ -15,92 +15,94 @@ import {ConnectToFireBase} from './js/Firebase.js'
 export class App extends Component {
   componentDidMount(){
     ConnectToFireBase()
+    // Parser('http://localhost:7000/Parser?site=https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075')
+    
   }
 
   render() {
     return(
       <>
-    <Router>
-      <Switch>
-          <Route 
-            exact 
-            path="/" 
-            render={()=><Home/>} 
-          />
-          <Route 
-            path="/verify"
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('verifyEmail') === null ? <Redirect to="/" /> : <Verify/>}
-                </div>
-              )
-            }
-          />
-          <Route
-            path="/auth" 
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Auth />}
-                </div>
-              )
-            }
-          />
-          <Route 
-            path="/reg" 
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Reg/> }
-                </div>
-              )
-            }  
-          />
-          <Route 
-            path="/reg_two" 
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('email') !== null ? <Redirect to="/" /> : localStorage.getItem('check') !== 'true' ? <Redirect to="/reg" /> : <RegTwo/> }
-                </div>
-              )
-            }
-          />
-          <Route 
-            path="/check" 
-            render={
-              ()=>(
-                <Check/>
-              )
-            }
-          />
-          <Route 
-            path="/wishlist" 
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('email') === null ? <Redirect to="/auth" /> : <Wishlist /> }
-                </div>
-              )
-            }
-          />
-            
-          <Route 
-            path="/finish" 
-            render={
-              ()=>(
-                <div className="container">
-                  {localStorage.getItem('verifyEmail')=== null ? <Redirect to="/" /> : <Finish/>}
-                </div>
-              )
-            }
-          />
-            
-        </Switch>
-    </Router>
-    <Alert />
-  </>
+        <Router>
+          <Switch>
+              <Route 
+                exact 
+                path="/" 
+                render={()=><Home/>} 
+              />
+              <Route 
+                path="/verify"
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('verifyEmail') === null ? <Redirect to="/" /> : <Verify/>}
+                    </div>
+                  )
+                }
+              />
+              <Route
+                path="/auth" 
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Auth />}
+                    </div>
+                  )
+                }
+              />
+              <Route 
+                path="/reg" 
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Reg/> }
+                    </div>
+                  )
+                }  
+              />
+              <Route 
+                path="/reg_two" 
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : localStorage.getItem('check') !== 'true' ? <Redirect to="/reg" /> : <RegTwo/> }
+                    </div>
+                  )
+                }
+              />
+              <Route 
+                path="/check" 
+                render={
+                  ()=>(
+                    <Check/>
+                  )
+                }
+              />
+              <Route 
+                path="/wishlist" 
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('email') === null ? <Redirect to="/auth" /> : <Wishlist /> }
+                    </div>
+                  )
+                }
+              />
+
+              <Route 
+                path="/finish" 
+                render={
+                  ()=>(
+                    <div className="container">
+                      {localStorage.getItem('verifyEmail')=== null ? <Redirect to="/" /> : <Finish/>}
+                    </div>
+                  )
+                }
+              />
+
+            </Switch>
+        </Router>
+        <Alert />
+      </>
     )
   }
 }

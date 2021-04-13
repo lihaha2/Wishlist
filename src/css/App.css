@@ -103,7 +103,7 @@ img:hover {
   margin: 5rem;
   padding: 2rem;
   max-width: 550px;
-  border-radius: 10px;
+  border-radius: 25px;
   background-color: var(--white);
   box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.20);
 }
@@ -123,7 +123,7 @@ img:hover {
   cursor: pointer;
 }
 
-.header__title:hover,.card__link > h3:hover, .goto:hover{
+.header__title:hover,.card__link > h3:hover, .goto:hover, .scrap a:hover{
   transition: 0.5s;
   color: #851822;
 }
@@ -157,8 +157,9 @@ img:hover {
 .form__input {
   outline: none;
   font-size: 14px;
-  padding: 10px 0px 10px 10px;
-  border: 1px solid var(--skin);
+  padding: 15px;
+  border: 2px solid var(--skin);
+  border-radius: 6px;
   font-family: var(--title);
   font-size: 20px;
   color: var(--blue);
@@ -677,6 +678,73 @@ details summary::-webkit-details-marker {
   width: 60%;
   border-radius: 8px;
   transform: none !important;
+}
+
+.scrap{
+  max-width: 760px;
+}
+
+.scrap a{
+  color: var(--red);
+}
+
+.scrap__text{
+  padding: 1rem 0;
+}
+
+.scrap__body{
+  padding: 1rem 0;
+}
+
+.scrap__body-wrapper{
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.scrap__body-wrapper--input{
+  transition: border 1s;
+  width: 80%;
+  font-size: 14px;
+  color: var(--blue);
+  font-family: var(--text);
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: 2px solid var(--red);
+  border-radius: 4px 0 0 4px;
+}
+
+.scrap__body-wrapper--button{
+  transition: 1s;
+  display: flex;
+  align-items: center;
+  background-color: var(--red);
+  border: 6.5px solid var(--red);
+  border-radius: 0px 4px 4px 0;
+  width: 20%;
+  cursor: pointer;
+  justify-content: center;
+}
+
+.scrap__body-wrapper--button:hover {
+  filter: brightness(0.7);
+}
+
+.scrap__body-wrapper--button:hover img{
+  transform: rotate(180deg);
+}
+
+.scrap__body-wrapper--button:hover ~ .scrap__body-wrapper--input{
+  border: 2px solid #8F343B;
+}
+
+.scrap__output-img{
+  user-select: none;
+  transition: 1s;
+  /* display: none; */
 }
 
 

@@ -4,12 +4,15 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 import {setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
 import {AlertOpen, Confirm} from '../js/Errors'
+import {Parser} from '../js/Parser'
 //images
 import Del from '../images/delete.svg'
 import Complete from '../images/check.svg'
 import CompleteSuccessful from '../images/check_complete.svg'
 import Back from '../images/back.svg'
 import Mode from '../images/mode.svg'
+import Add from '../images/add_white.svg'
+import Preloader from '../images/preloader.svg'
 
 const deleteWish = text => {
   let title = decodeURI(window.location.search).split('?')[1]
@@ -29,6 +32,16 @@ const addNewWish = () => {
   wish !== '' ? setToUserWishes(title,localStorage.getItem('unique'),wish.trim()) : AlertOpen('Заполните поле')
   document.querySelector('#wishText').value = ''
   document.querySelectorAll('details')[0].open = false
+}
+
+const FindProduct = ()=>{
+  let href = document.querySelector('#scrap').value.trim()
+  if (href === '') {
+    AlertOpen('Заполните поле')
+    return false
+  }else{
+    Parser(toString(href))
+  }
 }
 
 export const Wishlist = () => {
@@ -53,45 +66,68 @@ export const Wishlist = () => {
   },[])
 
   return(
-      <main className="auth__content wishes__content">
-          <header className="content__header">
-            <Link to="/" className="header__title">
+    <main>
+      <div className="auth__content wishes__content">
+        <header className="content__header">
+          <Link to="/" className="header__title">
             WISH LIST
+          </Link>
+          <Link to="/" title="На главную"><img src={Back} alt="На главную" /></Link>
+        </header>
+        <div className="content__header">
+            <Link to="/" className="header__title wish__header-title">
+            {title}
             </Link>
-            <Link to="/" title="На главную"><img src={Back} alt="На главную" /></Link>
-          </header>
-          <div className="content__header">
-              <Link to="/" className="header__title wish__header-title">
-              {title}
-              </Link>
-              <details className="details" id="newWishDetails">
-                <summary className="nav__buttons-link"><img src={Mode} alt="Добавить новое желание" /> Добавить новое желание</summary>
-                <div className="details__show">
-                  <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
-                  <Link to={`wishlist?${title}`} className="show__button onEnter" title="Добавить желание" onClick={addNewWish}>Добавить</Link>
-                </div>
-              </details>
-          </div>
-          <hr/>
-          <div className="user__wishlist">
-            {wishlist ? wishlist.map((e,i) => (
-                <div className="wish" key={i}>
-                <div className="wish__content">
-                  <span className="wish__num">
-                    {i+1}.
-                  </span>
-                  <article className={wishlistStatus ? 'wish__text ' + wishlistStatus.get(e) : 'sosi'} >
-                    {e}
-                  </article>
-                </div>
-                <div className="wish__buttons">
-                  <Link to={`wishlist?${title}`} onClick={() => completeWish(e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></Link>
-                  <Link to={`wishlist?${title}`} onClick={() => deleteWish(e)}><img className="svg" src={Del} alt="Удалить желание" title="Удалить желание" /></Link>
-                </div>
+            <details className="details" id="newWishDetails">
+              <summary className="nav__buttons-link"><img src={Mode} alt="Добавить новое желание" /> Добавить новое желание</summary>
+              <div className="details__show">
+                <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
+                <Link to={`wishlist?${title}`} className="show__button onEnter" title="Добавить желание" onClick={addNewWish}>Добавить</Link>
               </div>
-              )) : <div></div>
-            }
+            </details>
+        </div>
+        <hr/>
+        <div className="user__wishlist">
+          {(wishlist !== undefined && wishlistStatus!==undefined )? wishlist.map((e,i) => (
+              <div className="wish" key={i}>
+              <div className="wish__content">
+                <span className="wish__num">
+                  {i+1}.
+                </span>
+                <article className={wishlistStatus ? 'wish__text ' + wishlistStatus.get(e) : 'sosi'} >
+                  {e}
+                </article>
+              </div>
+              <div className="wish__buttons">
+                <Link to={`wishlist?${title}`} onClick={() => completeWish(e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></Link>
+                <Link to={`wishlist?${title}`} onClick={() => deleteWish(e)}><img className="svg" src={Del} alt="Удалить желание" title="Удалить желание" /></Link>
+              </div>
+            </div>
+            )) : <div></div>
+          }
+        </div>
+      </div>
+      <div className="auth__content wishes__content scrap">
+          <h2>Желания со ссылками (Beta)</h2>
+          <p className="scrap__text">
+            Желания со ссылками - это ваши желания из других магазинов. <br/>
+            Вы можете вставить ссылку на понравившийся вам товар, мы найдём его и отправим в ваш список. <br/><br/>
+            <b>Будьте внимательны!!! Список магазинов ограничен.</b><br/><br/> 
+            Поддерживаемые магазины: <a href="https://www.mvideo.ru/" target="__blank">Mvideo</a>.
+          </p>
+          <div className="scrap__body">
+            <p>
+              Вставьте ссылку на товар - пример: <a target="__blank" href="https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075">https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075</a>
+            </p>
+            <div className="scrap__body-wrapper">
+              <div className="scrap__body-wrapper--button" title="Найти товар из магазина" onClick={FindProduct} ><img src={Add} alt="Добавить"/></div>
+              <input className="scrap__body-wrapper--input" title="Вставьте ссылку на товар" type="text" name="scrap" id="scrap" placeholder="https://example.com/product?id=143289" />
+            </div>
+            <div className="scrap__output">
+              <img className="scrap__output-img" src={Preloader} alt="Загрузка..."/>
+            </div>
           </div>
-      </main>
+      </div>
+    </main>
   )
 }
