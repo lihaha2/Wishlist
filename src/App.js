@@ -1,110 +1,94 @@
-import React, {Component} from 'react'
-import {BrowserRouter as Router, Switch,Route, Redirect} from "react-router-dom"
+import React, {useState} from 'react'
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import './css/App.css'
-import {Auth} from './pages/Auth'
+import Auth from './pages/Auth'
 import {Reg} from './pages/Reg'
 import {RegTwo} from './pages/Reg_two'
-import {Home} from './pages/Home'
+import Home from './pages/Home'
 import {Verify} from './pages/Verify'
-import {Finish} from './pages/Finish'
+import Finish from './pages/Finish'
 import {Wishlist} from './pages/Wishlist'
-import {Check} from './js/Check'
-import {Alert} from './js/Errors'
+import Check from './js/Check'
+import {AlertBox} from './js/Errors'
 import {ConnectToFireBase} from './js/Firebase.js'
 
-export class App extends Component {
-  componentDidMount(){
-    ConnectToFireBase()
-    // Parser('http://localhost:7000/Parser?site=https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075')
-    
+const App = ()=> {
+  const [wishlistName, setWishlistName] = useState('')
+  const increment = (val)=>{
+    setWishlistName(val+'')
   }
 
-  render() {
-    return(
-      <>
-        <Router>
-          <Switch>
-              <Route 
-                exact 
-                path="/" 
-                render={()=><Home/>} 
-              />
-              <Route 
-                path="/verify"
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('verifyEmail') === null ? <Redirect to="/" /> : <Verify/>}
-                    </div>
-                  )
-                }
-              />
-              <Route
-                path="/auth" 
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Auth />}
-                    </div>
-                  )
-                }
-              />
-              <Route 
-                path="/reg" 
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Reg/> }
-                    </div>
-                  )
-                }  
-              />
-              <Route 
-                path="/reg_two" 
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('email') !== null ? <Redirect to="/" /> : localStorage.getItem('check') !== 'true' ? <Redirect to="/reg" /> : <RegTwo/> }
-                    </div>
-                  )
-                }
-              />
-              <Route 
-                path="/check" 
-                render={
-                  ()=>(
-                    <Check/>
-                  )
-                }
-              />
-              <Route 
-                path="/wishlist" 
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('email') === null ? <Redirect to="/auth" /> : <Wishlist /> }
-                    </div>
-                  )
-                }
-              />
+  ConnectToFireBase()
 
-              <Route 
-                path="/finish" 
-                render={
-                  ()=>(
-                    <div className="container">
-                      {localStorage.getItem('verifyEmail')=== null ? <Redirect to="/" /> : <Finish/>}
-                    </div>
-                  )
-                }
-              />
-
-            </Switch>
-        </Router>
-        <Alert />
-      </>
-    )
-  }
+  return(
+    <>
+      <Router>
+        <Switch>
+            <Route path="/" 
+              exact 
+              render={()=><Home increment={increment} />} 
+            />
+            <Route path="/verify"
+              render={
+                ()=>(
+                  <div className="container">
+                    {localStorage.getItem('verifyEmail') === null ? <Redirect to="/" /> : <Verify/>}
+                  </div>
+                )
+              }
+            />
+            <Route path="/auth" 
+              render={
+                ()=>(
+                  <div className="container">
+                    {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Auth />}
+                  </div>
+                )
+              }
+            />
+            <Route path="/reg" 
+              render={
+                ()=>(
+                  <div className="container">
+                    {localStorage.getItem('email') !== null ? <Redirect to="/" /> : <Reg/> }
+                  </div>
+                )
+              }  
+            />
+            <Route path="/reg_two" 
+              render={
+                ()=>(
+                  <div className="container">
+                    {localStorage.getItem('email') !== null ? <Redirect to="/" /> : localStorage.getItem('check') !== 'true' ? <Redirect to="/reg" /> : <RegTwo/> }
+                  </div>
+                )
+              }
+            />
+            <Route path="/check" 
+              render={
+                ()=>(
+                  <Check/>
+                )
+              }
+            />
+            <Route path="/wishlist" 
+              render={
+                ()=>localStorage.getItem('email') === null ? <Redirect to="/auth" /> : <Wishlist get={wishlistName} /> }
+            />
+            <Route path="/finish" 
+              render={
+                ()=>(
+                  <div className="container">
+                    {localStorage.getItem('verifyEmail')=== null ? <Redirect to="/" /> : <Finish/>}
+                  </div>
+                )
+              }
+            />
+          </Switch>
+      </Router>
+      <AlertBox />
+    </>
+  )
 }
 
 export default App;

@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import {Link} from "react-router-dom"
 import {createAccount} from '../js/Firebase'
-import {AlertOpen} from '../js/Errors'
+import {Alert} from '../js/Errors'
 //images
 import Back from '../images/back.svg'
 
 const Create = (password, confPassword) => {
     (password && confPassword) === '' ? 
-    AlertOpen('Заполните все поля') : 
-    confPassword !== password ? AlertOpen('Пароли не совпадают') : 
+    Alert('Заполните все поля') : 
+    confPassword !== password ? Alert('Пароли не совпадают') : 
     createAccount(localStorage.getItem('verifyEmail'),password)
 }
 

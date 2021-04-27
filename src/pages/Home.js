@@ -1,7 +1,7 @@
-import React, {useEffect, useState, Component} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Link} from "react-router-dom"
 import {setToUserWishlist, setToUserWishes, deleteUserWishlist, signOutUser} from '../js/Firebase.js'
-import {AlertOpen, Confirm} from '../js/Errors.js'
+import {Alert, Confirm} from '../js/Errors.js'
 import firebase from 'firebase/app'
 import 'firebase/database'
 //images
@@ -83,11 +83,11 @@ const newListHandler = (i = 0) => {
   let title = document.querySelector('#newList').value.trim()
   
   if (title === '') {
-    AlertOpen('Заполните поле')
+    Alert('Заполните поле')
   }else{
     document.querySelectorAll('.card__link > h3').forEach(e => e.innerHTML === title ? i = i + 1 : false)
     document.querySelector('#newList').value = ''
-    i > 0 ? AlertOpen('Такой список уже существует!') : setToUserWishlist(title, localStorage.getItem('unique'))
+    i > 0 ? Alert('Такой список уже существует!') : setToUserWishlist(title, localStorage.getItem('unique'))
     document.querySelectorAll('details')[0].open = false
   }
 }
@@ -97,7 +97,7 @@ const newWishHandler = () => {
   let text = document.querySelector('#wishText').value.trim()
 
   if (title && text === '') {
-    AlertOpen('Заполните поля')
+    Alert('Заполните поля')
   }else{
     setToUserWishes(title, localStorage.getItem('unique'), text)
     document.querySelector('#wishText').value = ''
@@ -106,37 +106,6 @@ const newWishHandler = () => {
 }
 
 const deleteListHandler = title => Confirm(`Вы точно хотите УДАЛИТЬ список: ${title}`, ()=> deleteUserWishlist(title,localStorage.getItem('unique')))
-
-const Wishlists = () => {
-  const [wishlist, setWishlist] = useState()
-  useEffect(()=>{
-    firebase.database().ref(`Users/${localStorage.getItem('unique')}`).child("Wishlists").on("value",(snapshot)=>{
-      const wish = snapshot.val()
-      const wishlist = []
-      for(let id in wish){
-        wishlist.push(id)
-      }
-      setWishlist(wishlist)
-    })
-  },[])
-
-  return(
-    <div className="wishlist__content">
-      {wishlist ? wishlist.map((e,i) => (
-        <div className="content__card" key={i}>
-          <Link to={`/wishlist?${e}`} className="card__link" title="Нажмите чтобы перейти к списку">
-            <h3>{e}</h3>
-            <img className="card__link-img" src={Default} alt="Wishlist default" />
-          </Link>
-          <div className="card__options">
-            <div onClick={()=>{document.querySelector('#newWishDetails').open === true ? document.querySelector('#newWishDetails').open = false : document.querySelector('#newWishDetails').open = true; ScrollTo(document.querySelector('#newWishDetails'))}}><img className="svg" src={ModeRed} alt="Добавить желание" title="Добавить желание в список" /></div>
-            <div onClick={()=>deleteListHandler(e)}><img className="svg" src={Del} alt="Удалить список желаний" title="Удалить список желаний" /></div>
-          </div>
-        </div>
-      )) : <div className="noWishes">У вас нет ни одного списка желаний</div> }
-    </div>
-  )
-}
 
 const SelectWishlists = () => {
   const [wishlist, setWishlist] = useState()
@@ -165,10 +134,24 @@ const signOutHandler = () => Confirm('Вы точно хотите выйти и
 
 const OpenListHandler = ()=> setTimeout(()=>document.querySelector('#newListDetails').open = true , 500)
 
+const Realize = () => {
+  if(document.querySelector('#wishlists') !== null){
+    ScrollTo(document.querySelector('#wishlists'))
+    OpenListHandler()
+  }
+  else window.location.replace('/auth')
+}
+
 const About = ()=>{
   return(
     <section className="home__about home__wishlists"> 
-      <h2 className="about__title">Добавляйте свои желания при помощи <span className="header__title goto" onClick={()=> document.querySelector('#wishlists') !== null ? ScrollTo(document.querySelector('#wishlists')) : ''}>WISHLIST</span></h2>
+      <div style={{width: '100%'}}>
+        <h2 className="about__title"><span style={{margin: '0 15px 0 0'}}>Добавляйте свои желания при помощи</span>
+        <span style={{padding: '0'}} className="header__title goto" onClick={()=> document.querySelector('#wishlists') !== null ? ScrollTo(document.querySelector('#wishlists')) : ''}>
+          WISHLIST
+        </span>
+        </h2>
+      </div>
       <div className="about__content">
         <div className="about__content-text">
           <p className="about__content-text--p">
@@ -181,12 +164,11 @@ const About = ()=>{
           </p>
           <div className="about__prewiew">
             <img src={Prewiew} className="about__prewiew-img" alt="Превью сайта"/>
-            <p className="about__content-text--p">
+            <p className="about__content-text--p" style={{padding: '2rem'}}>
               Наша команда попыталась заполнить часть из 10 процентов внешних обстоятельств,
               что бы вы смогли исполнить свою мечту.
             </p>
           </div>
-          
         </div>
         <div className="about__content-articles">
           <article className="about__content-articles--article">
@@ -201,7 +183,7 @@ const About = ()=>{
           </article>
         </div>
         <div className="about__content-articles">
-          <article className="about__content-articles--article goto" onClick={()=>{if(document.querySelector('#wishlists') !==null){ScrollTo(document.querySelector('#wishlists')); OpenListHandler()}}}>
+          <article className="about__content-articles--article goto" onClick={Realize}>
             Реализуй
           </article>
           <img src={Flight} alt="Самолет" className="about__content-articles--img" />
@@ -211,8 +193,59 @@ const About = ()=>{
   )
 }
 
-const HomeWishlists = ()=>{
-  return(
+const Home = ({increment})=> {
+  useEffect(() => {
+    ChangeSize()
+    return true
+  })
+
+  const Wishlists = () => {
+    const [wishlist, setWishlist] = useState()
+    useEffect(()=>{
+      firebase.database().ref(`Users/${localStorage.getItem('unique')}`).child("Wishlists").on("value",(snapshot)=>{
+        const wish = snapshot.val()
+        const wishlist = []
+        for(let id in wish){
+          wishlist.push(id)
+        }
+        setWishlist(wishlist)
+      })
+      return true
+    },[])
+
+    if (wishlist !== undefined && wishlist.length > 0) {
+      return(
+        <div className="wishlist__content">
+          { wishlist ? wishlist.map((e,i) => (
+              <div className="content__card" key={i}>
+                <Link to={`/wishlist`} onClick={()=>increment(e)} className="card__link" title="Нажмите чтобы перейти к списку">
+                  <h3>{e}</h3>
+                  <img className="card__link-img" src={Default} alt="Wishlist default" />
+                </Link>
+                <div className="card__options">
+                  <div onClick={()=>{document.querySelector('#newWishDetails').open === true ? document.querySelector('#newWishDetails').open = false : document.querySelector('#newWishDetails').open = true; ScrollTo(document.querySelector('#newWishDetails'))}}><img className="svg" src={ModeRed} alt="Добавить желание" title="Добавить желание в список" /></div>
+                  <div onClick={()=>deleteListHandler(e)}><img className="svg" src={Del} alt="Удалить список желаний" title="Удалить список желаний" /></div>
+                </div>
+              </div>
+            )) : <></>
+             
+          }
+        </div>
+      )
+    }else{
+      return(
+        <div className="noWishes">
+          <div>У вас нет ни одного списка желаний</div>
+          <div className="noWishes__link nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
+            <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
+            <span> Создать новый список желаний</span>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  const HomeWishlists = ()=>(
     <section className="home__wishlists" id="wishlists">
       <div className="wishlists__nav">
         <h2 title="Управляйте вашими желаниями здесь">Ваши списки желаний</h2>
@@ -240,99 +273,93 @@ const HomeWishlists = ()=>{
       <Wishlists />
     </section>
   )
-}
 
-export class Home extends Component {
-  componentDidMount(){
-    ChangeSize()
-  }
-
-  render() {
-    const Navlinks = ()=>(
-      <>
-      <li>
-        <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
-          <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
-          <span> Ваши списки желаний</span>
-        </div>
-      </li>
-      <li>
-        <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
-          <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
-          <span> Создать новый список желаний</span>
-        </div>
-      </li>
-      <li>
-        <div className="nav__link" onClick={signOutHandler} title="Выйти из аккаунта">
-          <img className="svg" title="Выйти из аккаунта" src={Logout} alt="Выход" />
-          <span> Выход</span>
-        </div>
-      </li>  
-      </>
-    )
+  const Navlinks = ()=>(
+    <>
+    <li>
+      <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
+        <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
+        <span> Ваши списки желаний</span>
+      </div>
+    </li>
+    <li>
+      <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
+        <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
+        <span> Создать новый список желаний</span>
+      </div>
+    </li>
+    <li>
+      <div className="nav__link" onClick={signOutHandler} title="Выйти из аккаунта">
+        <img className="svg" title="Выйти из аккаунта" src={Logout} alt="Выход" />
+        <span> Выход</span>
+      </div>
+    </li>  
+    </>
+  )
     
-    const Account = ()=>{
-      if (localStorage.getItem('email') !== null) {
-        return(
-          <div className="header__account grow">
-            <p title="Ваш аккаунт">{localStorage.getItem('email')}</p>
-          </div>
-        )
-      }else{
-        return(
-          <>
-          </>
-        )
-      }
-    }
-
-    const Log = ()=>{
+  const Account = ()=>{
+    if (localStorage.getItem('email') !== null) {
       return(
-        <li>
-          <Link to="/auth" className="nav__link" title="Войти в аккаунт">
-            <img className="svg" title="Вход" src={Login} alt="Вход" />
-            <span> Вход</span>
-          </Link>
-        </li>
+        <div className="header__account grow">
+          <p title="Ваш аккаунт">{localStorage.getItem('email')}</p>
+        </div>
+      )
+    }else{
+      return(
+        <>
+        </>
       )
     }
+  }
 
+  const Log = ()=>{
     return(
-      <main className="home">
-        <header className="home__head">
-          <div className="home__header">
-            <div className="header__container grow">
-              <div className="header__title " title="Домашняя страница" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
-                  WISH LIST
-              </div>
-            </div>
-            <nav className="header__nav grow">
-              <ul className="nav__ul">
-                <li>
-                  <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#about')); Underline(document.querySelector('.home__about > h2'))}}>
-                    <img className="svg" title="Описание" src={Text} alt="Описание" />
-                    <span> Описание</span>
-                  </div>
-                </li>
-                {
-                  localStorage.getItem('unique') !== null ? <Navlinks/> : <Log/>
-                }
-              </ul>
-            </nav>
-            <Account/>
-          </div>
-          <div className="home__header-change">
-            <div className="change__img" title="Показать/Скрыть навигацию" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
-              <img src={Sub} alt="reduce/increase" />
-            </div>
-          </div>
-        </header>
-        {
-          localStorage.getItem('unique') !== null ? <HomeWishlists /> : <></>
-        }
-        <div id="about"></div>
-        <About/>
-      </main>
+      <li>
+        <Link to="/auth" className="nav__link" title="Войти в аккаунт">
+          <img className="svg" title="Вход" src={Login} alt="Вход" />
+          <span> Вход</span>
+        </Link>
+      </li>
     )
   }
+
+  return(
+    <main className="home">
+      <header className="home__head">
+        <div className="home__header">
+          <div className="header__container grow">
+            <div className="header__title " title="Домашняя страница" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
+                WISH LIST
+            </div>
+          </div>
+          <nav className="header__nav grow">
+            <ul className="nav__ul">
+              <li>
+                <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#about')); Underline(document.querySelector('.home__about > h2'))}}>
+                  <img className="svg" title="Описание" src={Text} alt="Описание" />
+                  <span> Описание</span>
+                </div>
+              </li>
+              {
+                localStorage.getItem('unique') !== null ? <Navlinks/> : <Log/>
+              }
+            </ul>
+          </nav>
+          <Account/>
+        </div>
+        <div className="home__header-change">
+          <div className="change__img" title="Показать/Скрыть навигацию" onClick={ ()=>{localStorage.getItem('reduce') === 'true' ? localStorage.setItem('reduce', false) : localStorage.setItem('reduce', true); ChangeSize()} }>
+            <img src={Sub} alt="reduce/increase" />
+          </div>
+        </div>
+      </header>
+      {
+        localStorage.getItem('unique') !== null ? <HomeWishlists /> : <></>
+      }
+      <div id="about"></div>
+      <About/>
+    </main>
+  )
 }
+
+export default Home

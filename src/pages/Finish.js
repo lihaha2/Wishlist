@@ -6,10 +6,10 @@ const Redirect = () => {
   window.location.replace('/auth')
 }
 
-export const Finish = () => (
+const Finish = () => (
   <div className="auth__content">
     <header className="content__header">
-      <Link to="/" className="header__title">
+      <Link to="/auth" className="header__title">
         WISH LIST
       </Link>
     </header>
@@ -22,3 +22,5 @@ export const Finish = () => (
     </div>
   </div>
 )
+
+export default Finish

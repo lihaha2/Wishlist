@@ -1,13 +1,13 @@
 import React from 'react'
 import {Link} from "react-router-dom"
 import {verifyAccount} from '../js/Firebase.js'
-import {AlertOpen} from '../js/Errors.js'
+import {Alert} from '../js/Errors.js'
 //images
 import Back from '../images/back.svg'
   
 const Registration = ()=>{
   let email = document.querySelector('#email').value
-  email === '' ? AlertOpen('Заполните поле Почта') : verifyAccount(email)
+  email === '' ? Alert('Заполните поле Почта') : verifyAccount(email)
 }
 export const Reg = ()=>(
   <div className="auth__content">

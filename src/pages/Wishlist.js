@@ -3,8 +3,7 @@ import {Link} from "react-router-dom"
 import firebase from 'firebase/app'
 import 'firebase/database'
 import {setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
-import {AlertOpen, Confirm} from '../js/Errors'
-import {Parser} from '../js/Parser'
+import {Alert, Confirm} from '../js/Errors'
 //images
 import Del from '../images/delete.svg'
 import Complete from '../images/check.svg'
@@ -29,25 +28,55 @@ const completeWish = (text, status) => {
 const addNewWish = () => {
   let title = decodeURI(window.location.search).split('?')[1]
   let wish = document.getElementById('wishText').value
-  wish !== '' ? setToUserWishes(title,localStorage.getItem('unique'),wish.trim()) : AlertOpen('Заполните поле')
+  wish !== '' ? setToUserWishes(title,localStorage.getItem('unique'),wish.trim()) : Alert('Заполните поле')
   document.querySelector('#wishText').value = ''
   document.querySelectorAll('details')[0].open = false
+}
+
+const Parser = async(url)=>{
+  let res = await fetch(`http://localhost:7000/Parser?site=${url}`)
+  let result = await res.json()
+  document.querySelector('.find__card-title').innerHTML = result.title
+  document.querySelector('.find__card-img').src = `http://localhost:7000/images/${result.img}`
+  document.querySelector('.find__card-price').innerHTML = result.price
+  document.querySelector('.preloader').style.display= 'none'
+  document.querySelector('.scrap__output').style.display= 'block'
 }
 
 const FindProduct = ()=>{
   let href = document.querySelector('#scrap').value.trim()
   if (href === '') {
-    AlertOpen('Заполните поле')
+    Alert('Заполните поле')
     return false
   }else{
-    Parser(toString(href))
+    Parser(href)
+    document.querySelector('.preloader').style.display = 'block'
   }
+  
 }
 
-export const Wishlist = () => {
-  document.addEventListener('DOMContentLoaded', () => window.location.search === '' ? window.location.replace('/') : '')
+const Output = ()=>{
+  return(
+    <div className="scrap__output content__card" style={{display:'none'}}>
+      <div className="find__card">
+        <h3 className="find__card-title" >def</h3>
+        <img className="find__card-img" src="" alt="product"/>
+        <p className="find__card-price"></p>
+        <div className="find__card-buttons">
+          <button>Добавить</button>
+          <button>Отмена</button>
+        </div>
+      </div>
+    </div>
+  )    
+}
 
-  let title = decodeURI(window.location.search).split('?')[1]
+export const Wishlist = ({get}) => {
+  if (get === '') {
+    window.location.replace('/')
+  }
+
+  let title = get.trim()
   const [wishlist, setWishlist] = useState()
   const [wishlistStatus, setWishlistStatus] = useState()
   useEffect(()=>{
@@ -63,10 +92,11 @@ export const Wishlist = () => {
       setWishlist(wishlist)
       setWishlistStatus(wishlistStatus)
     })
+    return true
   },[])
 
   return(
-    <main>
+    <main className="container">
       <div className="auth__content wishes__content">
         <header className="content__header">
           <Link to="/" className="header__title">
@@ -113,19 +143,18 @@ export const Wishlist = () => {
             Желания со ссылками - это ваши желания из других магазинов. <br/>
             Вы можете вставить ссылку на понравившийся вам товар, мы найдём его и отправим в ваш список. <br/><br/>
             <b>Будьте внимательны!!! Список магазинов ограничен.</b><br/><br/> 
-            Поддерживаемые магазины: <a href="https://www.mvideo.ru/" target="__blank">Mvideo</a>.
+            Поддерживаемые магазины: <a href="https://www.citilink.ru/" target="__blank">СИТИЛИНК</a>.
           </p>
           <div className="scrap__body">
             <p>
-              Вставьте ссылку на товар - пример: <a target="__blank" href="https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075">https://www.mvideo.ru/products/sistemnyi-blok-igrovoi-lenovo-ideacentre-g5-14imb05-90n90096rs-30055075</a>
+              Вставьте ссылку на товар - пример: <a target="__blank" href="https://www.citilink.ru/product/noutbuk-lenovo-ideapad-s340-14api-14-ips-amd-ryzen-3-3200u-2-6ggc-8gb-1153686/">https://www.citilink.ru/product/noutbuk-lenovo-ideapad-s340-14api-14-ips-amd-ryzen-3-3200u-2-6ggc-8gb-1153686/</a>
             </p>
             <div className="scrap__body-wrapper">
               <div className="scrap__body-wrapper--button" title="Найти товар из магазина" onClick={FindProduct} ><img src={Add} alt="Добавить"/></div>
               <input className="scrap__body-wrapper--input" title="Вставьте ссылку на товар" type="text" name="scrap" id="scrap" placeholder="https://example.com/product?id=143289" />
             </div>
-            <div className="scrap__output">
-              <img className="scrap__output-img" src={Preloader} alt="Загрузка..."/>
-            </div>
+            <Output />
+            <img className="preloader" style={{display: 'none'}} src={Preloader} alt="Загрузка..."/>
           </div>
       </div>
     </main>

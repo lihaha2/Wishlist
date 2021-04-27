@@ -1,20 +1,22 @@
 import React from 'react'
 import {Link} from "react-router-dom"
 import {authAccount} from '../js/Firebase.js'
-import {AlertOpen} from '../js/Errors.js'
+import {Alert} from '../js/Errors.js'
 
 const Authentication = () =>{
   let email = document.querySelector('#email').value
   let password = document.querySelector('#password').value
-  email && password !== '' ? authAccount(email,password) : AlertOpen('Заполните все поля')
-} 
+  email && password !== '' ? authAccount(email,password) : Alert('Заполните все поля')
+}
 
-export const Auth = () => {
+const Auth = () => {
   document.addEventListener('keyup', e => {
-    e.key === 'Enter' ? document.querySelector('.onEnter').click() : console.clear()
+    if (e.key === 'Enter') {
+      document.querySelector('.onEnter').click()
+    }
   })
-  document.addEventListener('DOMContentLoaded', () => localStorage.clear())
-  
+  localStorage.clear()
+
   return (
     <div className="auth__content">
       <header className="content__header">
@@ -34,3 +36,5 @@ export const Auth = () => {
     </div>
   )
 }
+
+export default Auth

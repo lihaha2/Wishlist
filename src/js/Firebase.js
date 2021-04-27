@@ -20,9 +20,9 @@ class ConnectToBase {
   }
 }
 
-export const ConnectToFireBase = () => new ConnectToBase().iniApp
+const ConnectToFireBase = () => new ConnectToBase().iniApp
 
-export const createAccount = (email,password) => {
+const createAccount = (email,password) => {
   firebase.auth().createUserWithEmailAndPassword(email,password)
   .then(() => {
     localStorage.clear()
@@ -31,19 +31,19 @@ export const createAccount = (email,password) => {
   .catch(error => {errorBase(error.code)})
 }
 
-export const authAccount = (email,password) => {
+const authAccount = (email,password) => {
   firebase.auth().signInWithEmailAndPassword(email,password)
   .then( e => {
+    e.user.W !== undefined ? window.localStorage.setItem('unique',e.user.W.X) : window.localStorage.setItem('unique',e.user.X.X)
     window.localStorage.setItem('email',email)
-    window.localStorage.setItem('unique',e.user.W.X)
     window.location.replace('/')
   })
   .catch( error => errorBase(error.code))
 }
 
-export const verifyAccount = email => {
+const verifyAccount = email => {
   firebase.auth().sendSignInLinkToEmail(email,{
-    url: `http://wishlistforyou.herokuapp.com/reg_two?${email}`,
+    url: `https://wishlistforyou.netlify.app/reg_two?${email}`,
     handleCodeInApp: true
   }).then( async() => {
     localStorage.setItem('verifyEmail', email)
@@ -53,15 +53,15 @@ export const verifyAccount = email => {
 
 }
 
-export const setToUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists`).child(title).child('Wishes').set('', false)
+const setToUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists`).child(title).child('Wishes').set('', false)
 
-export const setToUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).set({status: false}, false)
+const setToUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).set({status: false}, false)
 
-export const deleteUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists/`).child(title).remove()
+const deleteUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists/`).child(title).remove()
 
-export const deleteUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).remove()
+const deleteUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).remove()
 
-export const signOutUser = () => {
+const signOutUser = () => {
   firebase.auth().signOut()
   .then(() => {
     localStorage.clear()
@@ -70,4 +70,7 @@ export const signOutUser = () => {
   .catch( error => window.alert(error))
 }
 
-export const completeUserWishes = (title, user, text, stat) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).update({status: stat})
+const completeUserWishes = (title, user, text, stat) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).update({status: stat})
+
+
+export {ConnectToFireBase, createAccount, authAccount, verifyAccount, setToUserWishlist, setToUserWishes, deleteUserWishlist, deleteUserWishes, signOutUser, completeUserWishes}
