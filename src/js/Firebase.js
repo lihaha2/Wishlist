@@ -22,33 +22,32 @@ class ConnectToBase {
 
 const ConnectToFireBase = () => new ConnectToBase().iniApp
 
-const createAccount = (email,password) => {
+const createAccount = (email,password, setRegTwoSuccess) => {
   firebase.auth().createUserWithEmailAndPassword(email,password)
   .then(() => {
     localStorage.clear()
-    window.location.replace('/finish')
+    return setRegTwoSuccess(true)
   })
   .catch(error => {errorBase(error.code)})
 }
 
-const authAccount = (email,password) => {
+const authAccount = (email,password, setauthSuccess) => {
   firebase.auth().signInWithEmailAndPassword(email,password)
   .then( e => {
     e.user.W !== undefined ? window.localStorage.setItem('unique',e.user.W.X) : window.localStorage.setItem('unique',e.user.X.X)
     window.localStorage.setItem('email',email)
-    window.location.replace('/')
+    return setauthSuccess(true)
   })
   .catch( error => errorBase(error.code))
 }
 
-const verifyAccount = email => {
+const verifyAccount = (email, setregSuccess) => {
   firebase.auth().sendSignInLinkToEmail(email,{
     url: `https://wishlistforyou.netlify.app/reg_two?${email}`,
     handleCodeInApp: true
-  }).then( async() => {
+  }).then( () => {
     localStorage.setItem('verifyEmail', email)
-    await firebase.database().ref(`Emails/`).child(email.split('@')[0]).update({status: 'during'})
-    window.location.replace('/verify')
+    return setregSuccess(true)
   }).catch(error => errorBase(error.code))
 
 }

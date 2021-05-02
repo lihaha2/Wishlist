@@ -817,6 +817,19 @@ details summary::marker {
   justify-content: space-between;
 }
 
+.not {
+  height: 90vh;
+}
+
+.not__found {
+  COLOR: WHITE;
+  FONT-SIZE: 50px;
+}
+
+.not__found > SPAn {
+  color: var(--red);
+}
+
 @media(max-width: 1050px){
   .home__header {
     justify-content: center;

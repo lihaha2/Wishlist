@@ -1,16 +1,19 @@
-import React from 'react'
-import {Link} from "react-router-dom"
+import React,{useState} from 'react'
+import {Link, Redirect} from "react-router-dom"
 import {verifyAccount} from '../js/Firebase.js'
 import {Alert} from '../js/Errors.js'
 //images
 import Back from '../images/back.svg'
   
-const Registration = ()=>{
-  let email = document.querySelector('#email').value
-  email === '' ? Alert('Заполните поле Почта') : verifyAccount(email)
-}
-export const Reg = ()=>(
-  <div className="auth__content">
+export const Reg = ()=>{
+  const [regSuccess, setregSuccess] = useState(false)
+
+  const Registration = ()=>{
+    let email = document.querySelector('#email').value
+    email === '' ? Alert('Заполните поле Почта') : verifyAccount(email, setregSuccess)
+  }
+
+  const RegRender = ()=> <div className="auth__content">
     <header className="content__header">
       <Link to="/" className="header__title">
         WISH LIST
@@ -28,4 +31,6 @@ export const Reg = ()=>(
       </form>
     </div>
   </div>
-)
+
+  return regSuccess ? <Redirect to="/verify" /> : <RegRender />
+}

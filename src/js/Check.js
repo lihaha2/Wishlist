@@ -1,13 +1,12 @@
+import {Redirect} from "react-router-dom"
+
 const Check = () => {
-    let url = window.location.search.split('&')[3].split('=')[1]
-    if (window.location.search === '') {
-        window.location.replace('/auth')
-    }else{
+    const Continue = ()=>{
+        let url = window.location.search.split('&')[3].split('=')[1]
         localStorage.setItem('check', true)
         window.location.replace(url)
     }
-    
-    return <></>
+    return window.location.search === '' ? <Redirect to="/auth" /> : <Continue />
 }
 
 export default Check

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Link} from "react-router-dom"
+import {Link, Redirect, Route} from "react-router-dom"
 import firebase from 'firebase/app'
 import 'firebase/database'
 import {setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
@@ -13,20 +13,16 @@ import Mode from '../images/mode.svg'
 import Add from '../images/add_white.svg'
 import Preloader from '../images/preloader.svg'
 
-const deleteWish = text => {
-  let title = decodeURI(window.location.search).split('?')[1]
+const deleteWish = (title, text) => 
   Confirm(`Вы точно хотите УДАЛИТЬ желание: 
   ${text}`, ()=> deleteUserWishes(title,localStorage.getItem('unique'),text))
-}
 
-const completeWish = (text, status) => {
+const completeWish = (title, text, status) => {
   status === false ? status = true : status = false
-  let title = decodeURI(window.location.search).split('?')[1]
   completeUserWishes(title,localStorage.getItem('unique'),text,status)
 }
 
-const addNewWish = () => {
-  let title = decodeURI(window.location.search).split('?')[1]
+const addNewWish = (title) => {
   let wish = document.getElementById('wishText').value
   wish !== '' ? setToUserWishes(title,localStorage.getItem('unique'),wish.trim()) : Alert('Заполните поле')
   document.querySelector('#wishText').value = ''
@@ -71,10 +67,13 @@ const Output = ()=>{
   )    
 }
 
-export const Wishlist = ({get}) => {
-  if (get === '') {
-    window.location.replace('/')
-  }
+const Wishlist = ({get})=>{
+  return <Route path="/wishlist" 
+    render={ ()=> get ==='' ? <Redirect to="/" /> : <Sosi get={get} /> }
+  />
+}
+
+const Sosi = ({get}) => {
 
   let title = get.trim()
   const [wishlist, setWishlist] = useState()
@@ -112,7 +111,7 @@ export const Wishlist = ({get}) => {
               <summary className="nav__buttons-link"><img src={Mode} alt="Добавить новое желание" /> Добавить новое желание</summary>
               <div className="details__show">
                 <textarea className="show__input" type="text" placeholder="Чего желаете?" id="wishText" />
-                <Link to={`wishlist?${title}`} className="show__button onEnter" title="Добавить желание" onClick={addNewWish}>Добавить</Link>
+                <div className="show__button onEnter" title="Добавить желание" onClick={()=>addNewWish(title)}>Добавить</div>
               </div>
             </details>
         </div>
@@ -129,8 +128,8 @@ export const Wishlist = ({get}) => {
                 </article>
               </div>
               <div className="wish__buttons">
-                <Link to={`wishlist?${title}`} onClick={() => completeWish(e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></Link>
-                <Link to={`wishlist?${title}`} onClick={() => deleteWish(e)}><img className="svg" src={Del} alt="Удалить желание" title="Удалить желание" /></Link>
+                <div onClick={() => completeWish(title,e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></div>
+                <div onClick={() => deleteWish(title,e)}><img className="svg" src={Del} alt="Удалить желание" title="Удалить желание" /></div>
               </div>
             </div>
             )) : <div></div>
@@ -160,3 +159,5 @@ export const Wishlist = ({get}) => {
     </main>
   )
 }
+
+export default Wishlist

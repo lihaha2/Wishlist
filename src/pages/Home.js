@@ -70,15 +70,6 @@ const ChangeSize = () => {
   }
 }
 
-const Underline = target => {
-  target.classList.add('underline')
-  target.classList.remove('nonunderline')
-  setTimeout(() => {
-    target.classList.add('nonunderline')
-    target.classList.remove('underline')
-  }, 800)
-}
-
 const newListHandler = (i = 0) => {
   let title = document.querySelector('#newList').value.trim()
   
@@ -130,16 +121,26 @@ const SelectWishlists = () => {
     </>
   )
 }
-const signOutHandler = () => Confirm('Вы точно хотите выйти из учётной записи?',signOutUser)
+
 
 const OpenListHandler = ()=> setTimeout(()=>document.querySelector('#newListDetails').open = true , 500)
 
 const Realize = () => {
-  if(document.querySelector('#wishlists') !== null){
+  const [state] = useState(localStorage.getItem('unique'))
+  const RealizeHandler = ()=>{
     ScrollTo(document.querySelector('#wishlists'))
     OpenListHandler()
   }
-  else window.location.replace('/auth')
+
+  if (state !== null) {
+    return <article className="about__content-articles--article goto" onClick={RealizeHandler}>
+      Реализуй
+    </article>
+  } else {
+    return <Link to="/auth" className="about__content-articles--article goto">
+      Реализуй
+    </Link>
+  }
 }
 
 const About = ()=>{
@@ -183,9 +184,7 @@ const About = ()=>{
           </article>
         </div>
         <div className="about__content-articles">
-          <article className="about__content-articles--article goto" onClick={Realize}>
-            Реализуй
-          </article>
+          <Realize/>
           <img src={Flight} alt="Самолет" className="about__content-articles--img" />
         </div>
       </div>
@@ -274,28 +273,29 @@ const Home = ({increment})=> {
     </section>
   )
 
-  const Navlinks = ()=>(
-    <>
-    <li>
-      <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#wishlists')); Underline(document.querySelector('.wishlists__nav > h2'))}}>
-        <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
-        <span> Ваши списки желаний</span>
-      </div>
-    </li>
-    <li>
-      <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
-        <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
-        <span> Создать новый список желаний</span>
-      </div>
-    </li>
-    <li>
-      <div className="nav__link" onClick={signOutHandler} title="Выйти из аккаунта">
-        <img className="svg" title="Выйти из аккаунта" src={Logout} alt="Выход" />
-        <span> Выход</span>
-      </div>
-    </li>  
+  const Navlinks = ()=>{
+    const signOutHandler = () => Confirm('Вы точно хотите выйти из учётной записи?',signOutUser)
+    return<>
+      <li>
+        <div className="nav__link" onClick={()=> ScrollTo(document.querySelector('#wishlists'))}>
+          <img className="svg" title="Ваши списки желаний" src={List} alt="Список" />
+          <span> Ваши списки желаний</span>
+        </div>
+      </li>
+      <li>
+        <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#newListDetails')); OpenListHandler()}}>
+          <img className="svg" title="Создать новый список желаний" src={Add} alt="Создать" />
+          <span> Создать новый список желаний</span>
+        </div>
+      </li>
+      <li>
+        <div className="nav__link" onClick={signOutHandler} title="Выйти из аккаунта">
+          <img className="svg" title="Выйти из аккаунта" src={Logout} alt="Выход" />
+          <span> Выход</span>
+        </div>
+      </li>  
     </>
-  )
+  }
     
   const Account = ()=>{
     if (localStorage.getItem('email') !== null) {
@@ -335,7 +335,7 @@ const Home = ({increment})=> {
           <nav className="header__nav grow">
             <ul className="nav__ul">
               <li>
-                <div className="nav__link" onClick={()=>{ ScrollTo(document.querySelector('#about')); Underline(document.querySelector('.home__about > h2'))}}>
+                <div className="nav__link" onClick={()=>ScrollTo(document.querySelector('#about'))}>
                   <img className="svg" title="Описание" src={Text} alt="Описание" />
                   <span> Описание</span>
                 </div>

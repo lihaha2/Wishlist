@@ -1,24 +1,27 @@
-import React from 'react'
-import {Link} from "react-router-dom"
+import React, {useState, useEffect} from 'react'
+import {Link, Redirect} from "react-router-dom"
 import {authAccount} from '../js/Firebase.js'
 import {Alert} from '../js/Errors.js'
 
-const Authentication = () =>{
-  let email = document.querySelector('#email').value
-  let password = document.querySelector('#password').value
-  email && password !== '' ? authAccount(email,password) : Alert('Заполните все поля')
-}
+
 
 const Auth = () => {
-  document.addEventListener('keyup', e => {
-    if (e.key === 'Enter') {
-      document.querySelector('.onEnter').click()
-    }
+  const [authSuccess, setauthSuccess] = useState(false)
+  
+  useEffect(() => {
+    document.addEventListener('keyup', e => e.key === 'Enter' && document.querySelector('.onEnter').click())
+    return true
   })
-  localStorage.clear()
+  
+  const Authentication = () =>{
+    let email = document.querySelector('#email').value
+    let password = document.querySelector('#password').value
+    email && password !== '' ? authAccount(email, password, setauthSuccess) : Alert('Заполните все поля')
+  }
 
-  return (
-    <div className="auth__content">
+  const AuthRender = ()=>{
+    localStorage.clear()
+    return <div className="auth__content">
       <header className="content__header">
         <Link to="/" className="header__title">
           WISH LIST
@@ -34,7 +37,10 @@ const Auth = () => {
         <Link to="#" className="button form__button temp_class onEnter" onClick={Authentication}>Войти</Link>
       </div>
     </div>
-  )
+  }
+
+  return authSuccess ? <Redirect to="/" /> : <AuthRender/>
+
 }
 
 export default Auth
