@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react'
 import {Link, Redirect, Route} from "react-router-dom"
 import firebase from 'firebase/app'
 import 'firebase/database'
-import {setToUserWishes, deleteUserWishes, completeUserWishes} from '../js/Firebase'
+import {setToUserWishes, setToUserWishesWithLink, deleteUserWishes, completeUserWishes} from '../js/Firebase'
 import {Alert, Confirm} from '../js/Errors'
+import axios from 'axios'
 //images
 import Del from '../images/delete.svg'
 import Complete from '../images/check.svg'
@@ -15,56 +16,38 @@ import Preloader from '../images/preloader.svg'
 
 const deleteWish = (title, text) => 
   Confirm(`Вы точно хотите УДАЛИТЬ желание: 
-  ${text}`, ()=> deleteUserWishes(title,localStorage.getItem('unique'),text))
+  ${text.shortTitle}`, ()=> deleteUserWishes(title,localStorage.getItem('unique'),text))
 
-const completeWish = (title, text, status) => {
+const completeWish = (title, data, status) => {
   status === false ? status = true : status = false
-  completeUserWishes(title,localStorage.getItem('unique'),text,status)
+  console.log(status)
+  completeUserWishes(title, localStorage.getItem('unique'), data, status)
 }
 
 const addNewWish = (title) => {
   let wish = document.getElementById('wishText').value
-  wish !== '' ? setToUserWishes(title,localStorage.getItem('unique'),wish.trim()) : Alert('Заполните поле')
+  wish !== '' ? setToUserWishes(title, localStorage.getItem('unique'),wish.trim()) : Alert('Заполните поле')
   document.querySelector('#wishText').value = ''
   document.querySelectorAll('details')[0].open = false
 }
 
-const Parser = async(url)=>{
-  let res = await fetch(`http://localhost:7000/Parser?site=${url}`)
-  let result = await res.json()
-  document.querySelector('.find__card-title').innerHTML = result.title
-  document.querySelector('.find__card-img').src = `http://localhost:7000/images/${result.img}`
-  document.querySelector('.find__card-price').innerHTML = result.price
-  document.querySelector('.preloader').style.display= 'none'
-  document.querySelector('.scrap__output').style.display= 'block'
-}
-
-const FindProduct = ()=>{
-  let href = document.querySelector('#scrap').value.trim()
-  if (href === '') {
-    Alert('Заполните поле')
-    return false
-  }else{
-    Parser(href)
-    document.querySelector('.preloader').style.display = 'block'
-  }
+const Parser = async({href, result, setResult})=>{
+  axios.get(`http://localhost:7000/Parser?site=${href}`)
+  .then((response)=> {
+    setResult(response.data)
+    document.querySelector('.preloader').style.display= 'none'
+  })
+  .catch(function (error) {
+    document.querySelector('.preloader').style.display= 'none'
+    Alert(`Ошибка!
+    
+    ${error}`)
+    console.log(error)
+  })
+  .then(function () {
+    document.querySelector('.preloader').style.display = 'none'
+  })
   
-}
-
-const Output = ()=>{
-  return(
-    <div className="scrap__output content__card" style={{display:'none'}}>
-      <div className="find__card">
-        <h3 className="find__card-title" >def</h3>
-        <img className="find__card-img" src="" alt="product"/>
-        <p className="find__card-price"></p>
-        <div className="find__card-buttons">
-          <button>Добавить</button>
-          <button>Отмена</button>
-        </div>
-      </div>
-    </div>
-  )    
 }
 
 const Wishlist = ({get})=>{
@@ -77,22 +60,52 @@ const Sosi = ({get}) => {
 
   let title = get.trim()
   const [wishlist, setWishlist] = useState()
-  const [wishlistStatus, setWishlistStatus] = useState()
+  const [result, setResult] = useState()
   useEffect(()=>{
     firebase.database().ref(`Users/${localStorage.getItem('unique')}/Wishlists/${title}`).child("Wishes")
-    .on("value",e => {
+    .on("value", e => {
       let res = e.val()
       let wishlist = []
-      let wishlistStatus = new Map()
       for(let id in res){
-        wishlist.push(id)
-        wishlistStatus.set(id,res[id].status)
+        wishlist.push(res[id])
       }
       setWishlist(wishlist)
-      setWishlistStatus(wishlistStatus)
     })
     return true
   },[])
+
+  const addWishWithLink =(result)=>{
+    setToUserWishesWithLink(title, localStorage.getItem('unique'), result && result).then(Alert('Товар добавлен в список желаний :)'))
+    setResult(false)
+  }
+  
+  const Output = ()=>{
+    return(
+      <div className="scrap__output content__card" style={result ? {display:'block'} : {display:'none'}}>
+        <div className="find__card">
+          <h3 className="find__card-title" >{result && result.title}</h3>
+          <img className="find__card-img" src={result && `http://localhost:7000/images/${result.img}`} alt="Product img"/>
+          <p className="find__card-price">{result && result.price}</p>
+          <div className="find__card-buttons">
+            <button onClick={()=>addWishWithLink(result)}>Добавить</button>
+            <button onClick={()=>{setResult(false)}}>Отмена</button>
+          </div>
+        </div>
+      </div>
+    )    
+  }
+
+  const FindProduct = ()=>{
+    let href = document.querySelector('#scrap').value.trim()
+    if (href === '') {
+      Alert('Заполните поле')
+      return false
+    }else{
+      setResult(false)
+      Parser({href, result, setResult})
+      document.querySelector('.preloader').style.display = 'block'
+    }
+  }
 
   return(
     <main className="container">
@@ -117,18 +130,20 @@ const Sosi = ({get}) => {
         </div>
         <hr/>
         <div className="user__wishlist">
-          {(wishlist !== undefined && wishlistStatus!==undefined )? wishlist.map((e,i) => (
-              <div className="wish" key={i}>
+          {(wishlist !== undefined) ? wishlist.map((e,i) => (
+            <div className="wish" key={i}>
               <div className="wish__content">
                 <span className="wish__num">
                   {i+1}.
                 </span>
-                <article className={wishlistStatus ? 'wish__text ' + wishlistStatus.get(e) : 'sosi'} >
-                  {e}
-                </article>
+                {e.img && <img className="wish__img" src={e.img && `http://localhost:7000/images/${e.img}`} alt="" />}
+                <div className={e.status ? 'wish__text ' + e.status : 'sosi'} >
+                  <div className="wish__shortTitle">{e.shortTitle} <span className="wish__price">{e.price}</span></div>
+                  <a className="wish__url" href={e.url}>{e.url && `${(e.url).substr(0,40)}  ...`}</a>
+                </div>
               </div>
               <div className="wish__buttons">
-                <div onClick={() => completeWish(title,e,wishlistStatus.get(e))}><img className={`svg`} src={!wishlistStatus.get(e) ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></div>
+                <div onClick={() => completeWish(title, e, e.status)}><img className={`svg`} src={!e.status ? Complete : CompleteSuccessful} alt="Желание выполнено" title="Желание выполнено" /></div>
                 <div onClick={() => deleteWish(title,e)}><img className="svg" src={Del} alt="Удалить желание" title="Удалить желание" /></div>
               </div>
             </div>

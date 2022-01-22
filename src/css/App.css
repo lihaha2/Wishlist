@@ -534,6 +534,7 @@ details summary::marker {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
 .wish__header-title{
@@ -543,12 +544,37 @@ details summary::marker {
 .wish__content{
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   font-size: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .wish__num{
   width: 30px;
   height: auto;
+}
+.wish__url, .wish__price{
+  font-size: 12px;
+}
+
+.wish__shortTitle{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wish__price{
+  padding: 5px;
+  background-color: var(--red);
+  border-radius: 6px;
+  color: var(--white);
+  font-style: var(--title);
+}
+
+.wish__img{
+  width: 100px;
+  transform: none !important;
 }
 
 .wish__text{

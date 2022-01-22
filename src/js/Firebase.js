@@ -54,11 +54,13 @@ const verifyAccount = (email, setregSuccess) => {
 
 const setToUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists`).child(title).child('Wishes').set('', false)
 
-const setToUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).set({status: false}, false)
+const setToUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).set({shortTitle: text.trim(),status: false}, false)
+
+const setToUserWishesWithLink = (title, user, data) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child((()=>{let title = (data.title).split(' '); return `${title[0]} ${title[1]}`})()).set({ shortTitle: (()=>{let title = (data.title).split(' '); return `${title[0]} ${title[1]}`})(), status: false, ...data}, false)
 
 const deleteUserWishlist = (title, user) => firebase.database().ref(`Users/${user}/Wishlists/`).child(title).remove()
 
-const deleteUserWishes = (title, user, text) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).remove()
+const deleteUserWishes = (title, user, data) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(data.shortTitle).remove()
 
 const signOutUser = () => {
   firebase.auth().signOut()
@@ -69,7 +71,8 @@ const signOutUser = () => {
   .catch( error => window.alert(error))
 }
 
-const completeUserWishes = (title, user, text, stat) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(text).update({status: stat})
+const completeUserWishes = (title, user, data, stat) => firebase.database().ref(`Users/${user}/Wishlists/${title}/Wishes`).child(data.shortTitle).update({...data, status: stat})
 
 
-export {ConnectToFireBase, createAccount, authAccount, verifyAccount, setToUserWishlist, setToUserWishes, deleteUserWishlist, deleteUserWishes, signOutUser, completeUserWishes}
+
+export {setToUserWishesWithLink, ConnectToFireBase, createAccount, authAccount, verifyAccount, setToUserWishlist, setToUserWishes, deleteUserWishlist, deleteUserWishes, signOutUser, completeUserWishes}
